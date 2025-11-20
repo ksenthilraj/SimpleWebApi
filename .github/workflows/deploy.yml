@@ -15,11 +15,22 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - run: dotnet restore
-    - run: dotnet build --configuration Release --no-restore
-    - run: dotnet publish -c Release -o ./publish
+    # Restore
+    - name: Restore
+      run: dotnet restore
+      working-directory: ./SimpleWebApi
 
-    # FIXED: Updated artifact action
+    # Build
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      working-directory: ./SimpleWebApi
+
+    # Publish
+    - name: Publish
+      run: dotnet publish -c Release -o ../publish
+      working-directory: ./SimpleWebApi
+
+    # Upload artifact
     - uses: actions/upload-artifact@v4
       with:
         name: published-app
@@ -29,13 +40,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    # FIXED: Updated artifact action
     - uses: actions/download-artifact@v4
       with:
         name: published-app
         path: ./publish
 
-    - uses: azure/webapps-deploy@v2
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
       with:
         app-name: coimbatorenetdemo2025
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
