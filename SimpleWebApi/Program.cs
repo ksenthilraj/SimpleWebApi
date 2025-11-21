@@ -12,7 +12,7 @@ app.UseSwaggerUI();
 
 app.MapGet("/api/hello", () =>
 {
-    return "Hello from GitHub Actions + Azure!";
+    return "Hello from GitHub Actions + Azure! Net conference 2025";
 });
 
 app.Run();
